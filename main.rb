@@ -1,35 +1,27 @@
-# frozen_string_literal: true
 require 'sinatra'
-require_relative 'config'
+require_relative 'config/config'
+require_relative 'helpers/item_helper'
+require_relative 'models/item'
 
-get '/' do
-  'This is the home page. You will see this if you don\'t specify any specific route.'
+controller = ItemHelper.new
+
+get '/items/new' do
+  erb :item_add
 end
 
-get '/messages' do
-  "<h1 style=\"background-color:DodgerBlue;\">Hello world!</h1>"
-end
-
-get '/messages/:name' do
-  name = params['name']
-  color = params['color'] ? params['color'] : 'DodgerBlue'
-
-  erb :message, locals: {
-    name: name,
-    color: color
+get '/items' do
+  erb :item_index, locals: {
+    items: controller.get_items
   }
 end
 
-get '/login' do
-  erb :login
-end
+post '/items/new' do
+  item = Item.new(name: params['name'],
+                  price: params['price'],
+                  category: params['category'])
 
-post '/login' do
-  if params['username'] == 'admin' && params['password'] == 'admin'
-    return 'logged in'
-  else
-    redirect '/login'
-  end
-end
+  controller.add_item(item)
 
+  redirect '/items/new'
+end
 
