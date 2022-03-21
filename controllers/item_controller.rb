@@ -1,4 +1,4 @@
-class ItemHelper
+class ItemController
   def initialize
     @items = []
   end

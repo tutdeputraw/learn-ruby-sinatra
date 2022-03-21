@@ -1,17 +1,17 @@
 require 'sinatra'
 require_relative 'config/config'
-require_relative 'helpers/item_helper'
+require_relative 'controllers/item_controller'
 require_relative 'models/item'
 
-controller = ItemHelper.new
+item_controller = ItemController.new
 
 get '/items/new' do
-  erb :item_add
+  erb :"item/item_add"
 end
 
 get '/items' do
-  erb :item_index, locals: {
-    items: controller.get_items
+  erb :"item/item_index", locals: {
+    items: item_controller.get_items
   }
 end
 
@@ -20,7 +20,7 @@ post '/items/new' do
                   price: params['price'],
                   category: params['category'])
 
-  controller.add_item(item)
+  item_controller.add_item(item)
 
   redirect '/items/new'
 end
